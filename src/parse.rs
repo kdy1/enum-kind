@@ -207,7 +207,7 @@ where
                 t.0
             });
             let tts = unwrap_paren(tts);
-            let parsed: T = parse(tts.into()).unwrap();
+            let parsed: T = parse(tts.into()).expect("failed to parse attribute");
 
             res += Ok(parsed);
         } else {
@@ -235,5 +235,5 @@ where
         .map(|tt| TokenTree { span, ..tt })
         .collect::<TokenStream>();
 
-    parse(tts.into()).unwrap()
+    parse(tts.into()).expect("failed to parse string literal")
 }

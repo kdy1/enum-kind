@@ -34,15 +34,112 @@
 //! assert!(!E::C{}.is_a() && !E::C{}.is_a_or_b() && !E::C{}.is_b());
 //! assert_eq!(E::C{}.num(), 3);
 //!
-
+//!
 //! # }
 //! ```
+//!
+//! -----
+//!
+//! # Real usecase
+//!
+//! ```rust
+//! #[macro_use]
+//! extern crate enum_kind;
+//!
+//! #[derive(Kind, Debug, Clone, Eq, PartialEq, Hash)]
+//! #[kind(function(precedence = "u8"))]
+//! pub enum BinOpToken {
+//!     /// `==`
+//!     #[kind(precedence = "6")]
+//!     EqEq,
+//!     /// `!=`
+//!     #[kind(precedence = "6")]
+//!     NotEq,
+//!     /// `===`
+//!     #[kind(precedence = "6")]
+//!     EqEqEq,
+//!     /// `!==`
+//!     #[kind(precedence = "6")]
+//!     NotEqEq,
+//!     /// `<`
+//!     #[kind(precedence = "7")]
+//!     Lt,
+//!     /// `<=`
+//!     #[kind(precedence = "7")]
+//!     LtEq,
+//!     /// `>`
+//!     #[kind(precedence = "7")]
+//!     Gt,
+//!     #[kind(precedence = "7")]
+//!     /// `>=`
+//!     #[kind(precedence = "7")]
+//!     GtEq,
+//!     /// `<<`
+//!     #[kind(precedence = "8")]
+//!     LShift,
+//!     /// `>>`
+//!     #[kind(precedence = "8")]
+//!     RShift,
+//!     /// `>>>`
+//!     #[kind(precedence = "8")]
+//!     ZeroFillRShift,
+//!     /// `+`
+//!     #[kind(precedence = "9")]
+//!     Plus,
+//!     /// `-`
+//!     #[kind(precedence = "9")]
+//!     Minus,
+//!     /// `*`
+//!     #[kind(precedence = "10")]
+//!     Mul,
+//!     /// `/`
+//!     #[kind(precedence = "10")]
+//!     Div,
+//!     /// `%`
+//!     #[kind(precedence = "10")]
+//!     Mod,
+//!     /// `|`
+//!     #[kind(precedence = "3")]
+//!     BitOr,
+//!     /// `^`
+//!     #[kind(precedence = "4")]
+//!     BitXor,
+//!     /// `&`
+//!     #[kind(precedence = "5")]
+//!     BitAnd,
+//!     /// `in`
+//!     #[kind(precedence = "7")]
+//!     In,
+//!     /// `instanceof`
+//!     #[kind(precedence = "7")]
+//!     InstanceOf,
+//!     /// `**`
+//!     #[kind(precedence = "10")]
+//!     Exp,
+//!     /// `||`
+//!     #[kind(precedence = "1")]
+//!     LogicalOr,
+//!     /// `&&`
+//!     #[kind(precedence = "2")]
+//!     LogicalAnd,
+//! }
+//!
+//! # fn main() {
+//! # }
+//! ```
+//!
+//!
+//!
+//!
+//!
+//!
+//!
+//!
 
 #[macro_use]
 extern crate pmutil;
 extern crate proc_macro2;
 extern crate proc_macro;
-#[macro_use]
 extern crate quote;
 extern crate syn;
 #[macro_use]

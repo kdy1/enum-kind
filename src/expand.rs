@@ -28,12 +28,22 @@ pub fn expand(
 
     let (impl_generics, ty_generics, where_clause) = generics.split_for_impl();
 
-    let tts = quote! {
-        impl #impl_generics #name #ty_generics #where_clause {
-            #items
+    Quote::new_call_site()
+        .quote_with(smart_quote!(
+        Vars {
+            impl_generics,
+            name,
+            ty_generics,
+            where_clause,
+            items,
+        },
+        {
+            impl impl_generics name ty_generics where_clause {
+                items
+            }
         }
-    };
-    parse(tts.into()).unwrap()
+    ))
+        .parse()
 }
 
 impl FnDef {
@@ -57,7 +67,7 @@ impl FnDef {
                             EnumName: enum_name,
                             VariantName: v.name,
                         },
-                        { EnumName::VariantName {..} }
+                        { &EnumName::VariantName {..} }
                     ))
                         .parse::<Pat>(),
                     VariantData::Tuple(ref _fields, _) => Quote::new_call_site()
@@ -66,7 +76,7 @@ impl FnDef {
                                 EnumName: enum_name,
                                 VariantName: v.name,
                             },
-                            { EnumName::VariantName(..) }
+                            { &EnumName::VariantName(..) }
                         ))
                         .parse::<Pat>(),
                     VariantData::Unit => Quote::new_call_site()
@@ -75,7 +85,7 @@ impl FnDef {
                                 EnumName: enum_name,
                                 VariantName: v.name,
                             },
-                            { EnumName::VariantName }
+                            { &EnumName::VariantName }
                         ))
                         .parse::<Pat>(),
                 };
@@ -130,13 +140,13 @@ impl FnDef {
             })
             .collect();
 
-        // match *self {}
+        // match self {}
         let match_expr = ExprKind::Match(ExprMatch {
             match_token: call_site(),
             brace_token: call_site(),
 
             expr: Quote::new_call_site()
-                .quote_with(smart_quote!(Vars {}, { *self }))
+                .quote_with(smart_quote!(Vars {}, { self }))
                 .parse::<Expr>()
                 .into(),
 
