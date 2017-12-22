@@ -1,0 +1,43 @@
+//! # Atributes on enum
+//! ## functions
+//! `#[kind(functions(name = "return_type"))]`
+//!
+//! ```rust
+//!#[derive(Kind)]
+//!#[kind(functions(is_a = "bool", is_b = "bool"))]
+//! enum E {
+//!
+//! }
+//!
+//! ```
+
+#[macro_use]
+extern crate pmutil;
+extern crate proc_macro2;
+extern crate proc_macro;
+#[macro_use]
+extern crate quote;
+extern crate syn;
+#[macro_use]
+extern crate synom;
+
+use input::Input;
+use quote::ToTokens;
+
+mod expand;
+mod input;
+mod parse;
+mod util;
+
+#[proc_macro_derive(Kind, attributes(kind))]
+pub fn derive_kind(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
+    let input = syn::parse::<syn::DeriveInput>(input)
+        .map(From::from)
+        .expect("failed to parse derive input");
+    let item = expand::expand(input);
+    let tokens = item.into_tokens();
+
+    println!("Expanded:{}", tokens);
+
+    tokens.into()
+}
