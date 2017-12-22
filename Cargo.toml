@@ -1,5 +1,5 @@
 [package]
-name = "enum_kind"
+name = "enum-kind"
 version = "0.1.0"
 authors = ["강동윤 <kdy1@outlook.kr>"]
 
